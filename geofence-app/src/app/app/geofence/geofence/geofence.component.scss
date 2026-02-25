@@ -1,0 +1,293 @@
+$app-primary: #007bff;
+$app-success: #28a745;
+$app-danger: #dc3545;
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+.navbar-heading {
+  margin-left: 20px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #fff; /* or any color you prefer */
+  font-family:'Inter', sans-serif
+}
+
+  /* ---------------- Navbar ---------------- */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: $app-primary;
+    color: #fff;
+
+    .btn {
+      background: #fff;
+      color: $app-primary;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .create { font-size: 16px; }
+
+    .nav-center input {
+      padding: 4px 6px;
+      margin-right: 5px;
+      border-radius: 4px;
+      border: none;
+      width: 120px;
+    }
+  }
+
+  /* ---------------- Main Layout ---------------- */
+  .main-layout {
+    display: flex;
+    flex: 1;
+    position: relative;
+
+    .table-panel {
+      width: 0;
+      overflow: hidden;
+      transition: width 0.3s;
+      background: #fff;
+      border-right: 2px solid #ccc;
+      position: relative;
+
+      .resizer {
+        width: 6px;
+        cursor: ew-resize;
+        background: #ccc;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 10;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th, td {
+          border: 1px solid #ddd;
+          padding: 5px;
+          text-align: center;
+        }
+
+        th { background: #f0f0f0; }
+
+        tr.active-row td:nth-child(3) {
+          color: $app-success;
+          font-weight: bold;
+        }
+
+        button {
+          margin-right: 3px;
+          padding: 3px 6px;
+          border-radius: 4px;
+          border: none;
+          cursor: pointer;
+          font-weight: bold;
+
+          &:nth-child(1) { background: $app-primary; color: #fff; }
+          &:nth-child(2) { background: $app-danger; color: #fff; }
+          &:nth-child(3) { background: $app-success; color: #fff; }
+        }
+      }
+    }
+
+    .map-panel {
+      flex: 1;
+      position: relative;
+
+      #map { width: 100%; height: 100%; }
+
+      /* ---------------- Map Controls (Create / Undo / Redo) ---------------- */
+      .map-controls {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 1100;
+
+        button {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          border: none;
+          background: $app-primary;
+          color: #fff;
+          font-size: 20px;
+          font-weight: bold;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+          transition: all 0.2s;
+
+          &:hover {
+            background: darken($app-primary, 5%);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+          }
+        }
+
+        .create-zone-btn {
+          background: linear-gradient(135deg, $app-success, #20c997);
+          font-size: 22px;
+        }
+
+        .undo-btn, .redo-btn {
+          background: $app-primary;
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  /* ---------------- Popup Overlay ---------------- */
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.35);
+    z-index: 998;
+  }
+
+  /* ---------------- Zone Naming Popup ---------------- */
+  .zone-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    background: #ffffff;
+    padding: 18px 22px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 280px;
+    max-width: 90%;
+    z-index: 999;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+    opacity: 0;
+    animation: popupOpen 0.25s forwards;
+
+    @keyframes popupOpen {
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .popup-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+
+      .popup-title {
+        font-weight: 700;
+        font-size: 16px;
+        color: #222;
+        text-align: center;
+      }
+    }
+
+    input {
+      padding: 6px 6px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      width: 100%;
+      outline: none;
+      transition: all 0.2s;
+
+      &:focus {
+        border-color: $app-primary;
+        box-shadow: 0 0 8px rgba(0,123,255,0.25);
+      }
+    }
+
+    .error-message {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      color: $app-danger;
+      font-size: 13px;
+      font-weight: 600;
+
+      &::before { content: "⚠️"; }
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 12px;
+
+      button {
+        flex: 1;
+        padding: 10px 0;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+        }
+
+        &.save { background: linear-gradient(135deg, $app-success, #20c997); color: #fff; }
+        &.cancel { background: linear-gradient(135deg, $app-danger, #e74c3c); color: #fff; }
+      }
+    }
+  }
+
+  /* ---------------- Zone Created Toast ---------------- */
+  .zone-created-popup {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, $app-success, #20c997);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    z-index: 1000;
+    min-width: 180px;
+    max-width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    animation: slideUpFade 0.5s ease-out forwards;
+    opacity: 0;
+
+    @keyframes slideUpFade {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    &.hide {
+      animation: slideDownFade 0.5s ease-in forwards;
+    }
+
+    @keyframes slideDownFade {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(20px); opacity: 0; }
+    }
+  }
+}

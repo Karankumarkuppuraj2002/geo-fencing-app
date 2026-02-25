@@ -1,0 +1,95 @@
+<div class="app-container">
+
+  <!-- Navbar -->
+<div class="navbar">
+  <div class="nav-left">
+    <button class="btn toggle-sidebar-btn" (click)="togglePanel()">☰</button>
+  </div>
+
+  <div class="nav-center">
+    <input type="text" placeholder="Place Name" [(ngModel)]="searchPlaceName">
+    <input type="number" placeholder="Latitude" [(ngModel)]="searchLatitude">
+    <input type="number" placeholder="Longitude" [(ngModel)]="searchLongitude">
+    <button class="btn" (click)="searchPlace()">Search</button>
+
+    <!-- Heading after search box -->
+    <span class="navbar-heading">AGM GEOFENCE APP</span>
+  </div>
+
+  <div class="nav-right">
+    <button class="btn create" (click)="startDrawingZone()">+ Create Zone</button>
+  </div>
+</div>
+
+
+  <!-- Main layout -->
+  <div class="main-layout">
+
+    <!-- Table panel (Saved Zones) -->
+    <div #tablePanel class="table-panel">
+      <div class="resizer" (mousedown)="startResize($event)"></div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>Zone Name</th>
+            <th>Active</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let zone of savedZones; let i = index" [class.active-row]="zone.active">
+            <td>{{ i + 1 }}</td>
+            <td>{{ zone.name }}</td>
+            <td>{{ zone.active ? 'Active' : '' }}</td>
+            <td>
+              <button *ngIf="!zone.visibleOnMap" (click)="viewZone(zone._id)">👁️</button>
+              <button *ngIf="zone.visibleOnMap" (click)="unviewZone(zone._id)">🙈</button>
+              <button (click)="deleteZone(zone._id)">❌</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+<div #mapPanel class="map-panel">
+  <div id="map"></div>
+
+  <!-- Drawing Controls -->
+  <div class="map-controls">
+    <button class="undo-btn" (click)="undoPoint()">↺</button>
+    <button class="redo-btn" (click)="redoPoint()">↻</button>
+  </div>
+</div>
+
+
+  <!-- Overlay -->
+  <div class="popup-overlay" *ngIf="showZoneNamePopup"></div>
+
+  <!-- Zone Naming Popup -->
+  <div class="zone-popup" *ngIf="showZoneNamePopup">
+    <div class="popup-header">
+      <span class="popup-title">New Zone Name</span>
+    </div>
+
+    <input type="text" placeholder="Enter Zone Name" [(ngModel)]="zoneName">
+
+    <div class="error-message" *ngIf="duplicateZonePopup">
+      Zone name already exists!
+    </div>
+
+    <div class="btn-row">
+      <button class="save" (click)="saveZone()">Save</button>
+      <button class="cancel" (click)="cancelZoneCreation()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Zone Created Notification -->
+  <div class="zone-created-popup" *ngIf="showZoneCreatedPopup">
+    ✅ "{{ zoneCreatedMessage }}"
+  </div>
+
+</div>
+
